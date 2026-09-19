@@ -571,8 +571,8 @@
     .money-callout h2,
     .money-callout p{
       opacity:0;
-      transform:translateY(22px);
-      transition:opacity .6s ease, transform .6s ease;
+      transform:translateY(48px);
+      transition:opacity .9s ease, transform .9s ease;
     }
     .section-head.is-visible,
     .pain-cell.is-visible,
@@ -809,8 +809,7 @@
       <div class="tag">Acesso ao treinamento</div>
       <div class="value"><sup>R$</sup>49,90</div>
       <div class="alt">pagamento único — menos que um rolo de filamento</div>
-      <div class="market-compare">Cursos parecidos custam a partir de R$197 no mercado</div>
-      <div class="upsell-note">O curso avançado do Fabricio (mais módulos) vai custar R$97 quando lançar — comece agora por este, completo para iniciantes, por R$49,90.</div>
+      <div class="market-compare">O curso avançado (mais módulos) vai custar R$97 quando lançar</div>
       <ul class="price-list">
         <li>12 módulos completos: do zero ao seu projeto final</li>
         <li>Do primeiro contato com a impressora até vender suas peças</li>
@@ -879,7 +878,7 @@
           revealObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
     revealTargets.forEach(function (el) { revealObserver.observe(el); });
   } else {
     document.querySelectorAll(
