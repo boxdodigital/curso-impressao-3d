@@ -32,6 +32,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<noscript><style>
+  .section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .money-callout h2, .money-callout p{
+    opacity:1 !important;
+    transform:none !important;
+  }
+</style></noscript>
 <style>
   :root{
     --bg: #0a0c08;
@@ -382,6 +388,31 @@
   }
   .instructor-name b{ color:var(--ink); }
 
+  /* ---------- money callout ---------- */
+  .money-callout{
+    padding:70px 0;
+    text-align:center;
+    background:linear-gradient(180deg, var(--bg) 0%, #0d1408 50%, var(--bg) 100%);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .money-callout h2{
+    font-size:clamp(28px, 4.2vw, 46px);
+    max-width:18ch;
+    margin:0 auto 14px;
+    line-height:1.15;
+  }
+  .money-callout p{
+    font-size:clamp(16px, 2vw, 20px);
+    color:var(--ink-muted);
+  }
+  .money-callout p em{
+    font-style:normal;
+    color:var(--green);
+    font-weight:600;
+  }
+
   /* ---------- pricing ---------- */
   .pricing{
     padding:80px 0;
@@ -527,6 +558,44 @@
     .module-grid{ grid-template-columns:1fr; }
     .instructor .wrap{ grid-template-columns:1fr; text-align:center; }
     .avatar{ margin:0 auto; }
+  }
+
+  /* ---------- scroll reveal ---------- */
+  @media (prefers-reduced-motion: no-preference){
+    .section-head,
+    .pain-cell,
+    .forwhom-card,
+    .module-card,
+    .price-box,
+    .faq-item,
+    .money-callout h2,
+    .money-callout p{
+      opacity:0;
+      transform:translateY(22px);
+      transition:opacity .6s ease, transform .6s ease;
+    }
+    .section-head.is-visible,
+    .pain-cell.is-visible,
+    .forwhom-card.is-visible,
+    .module-card.is-visible,
+    .price-box.is-visible,
+    .faq-item.is-visible,
+    .money-callout h2.is-visible,
+    .money-callout p.is-visible{
+      opacity:1;
+      transform:none;
+    }
+  }
+
+  /* leve pulso no botão principal do hero, chama o olho pro CTA */
+  @keyframes cta-pulse{
+    0%, 100%{ box-shadow:0 0 0 0 rgba(140,255,61,.35); }
+    50%{ box-shadow:0 0 0 10px rgba(140,255,61,0); }
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .hero-cta .btn-primary{
+      animation:cta-pulse 2.6s ease-in-out infinite;
+    }
   }
 </style>
 <!-- Microsoft Clarity -->
@@ -726,6 +795,13 @@
   </div>
 </section>
 
+<section class="money-callout">
+  <div class="wrap">
+    <h2 class="reveal">Sua impressora pode pagar suas contas.</h2>
+    <p class="reveal">Pare de produzir por hobby. Comece a produzir por <em>lucro</em>.</p>
+  </div>
+</section>
+
 <section class="pricing" id="preco">
   <div class="wrap">
     <div class="price-box bracket">
@@ -790,5 +866,26 @@
   © 2026 Fabricio Matias Teixeira — Todos os direitos reservados
 </footer>
 
+<script>
+  // Revela seções suavemente conforme aparecem na tela
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var revealTargets = document.querySelectorAll(
+      '.section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .money-callout h2, .money-callout p'
+    );
+    var revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    revealTargets.forEach(function (el) { revealObserver.observe(el); });
+  } else {
+    document.querySelectorAll(
+      '.section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .money-callout h2, .money-callout p'
+    ).forEach(function (el) { el.classList.add('is-visible'); });
+  }
+</script>
 </body>
 </html>
