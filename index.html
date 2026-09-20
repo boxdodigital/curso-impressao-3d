@@ -33,7 +33,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <noscript><style>
-  .section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .money-callout h2, .money-callout p{
+  .section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .testimonial-card, .money-callout h2, .money-callout p{
     opacity:1 !important;
     transform:none !important;
   }
@@ -413,6 +413,34 @@
     font-weight:600;
   }
 
+  /* ---------- testimonials ---------- */
+  .testimonials{
+    padding:80px 0;
+    border-top:1px solid var(--line);
+  }
+  .testimonial-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+    gap:24px;
+  }
+  .testimonial-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+  }
+  .testimonial-card img{
+    width:100%;
+    height:auto;
+    display:block;
+  }
+  .testimonial-card p{
+    padding:14px 16px;
+    font-size:13.5px;
+    color:var(--ink-muted);
+    line-height:1.4;
+  }
+
   /* ---------- pricing ---------- */
   .pricing{
     padding:80px 0;
@@ -575,6 +603,7 @@
     .module-card,
     .price-box,
     .faq-item,
+    .testimonial-card,
     .money-callout h2,
     .money-callout p{
       opacity:0;
@@ -587,6 +616,7 @@
     .module-card.is-visible,
     .price-box.is-visible,
     .faq-item.is-visible,
+    .testimonial-card.is-visible,
     .money-callout h2.is-visible,
     .money-callout p.is-visible{
       opacity:1;
@@ -809,6 +839,37 @@
   </div>
 </section>
 
+<section class="testimonials">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Quem fez o curso já está vendendo.</h2>
+      <p>Prints reais de alunos aplicando o módulo de monetização do curso.</p>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <img src="img/depoimentos/depo-adriano.jpg" alt="Depoimento da Loja do Adriano" loading="lazy" decoding="async">
+        <p>Loja do Adriano — pedidos triplicando em menos de 1 hora</p>
+      </div>
+      <div class="testimonial-card">
+        <img src="img/depoimentos/depo-elton1.jpg" alt="Depoimento de Elton J. Martins" loading="lazy" decoding="async">
+        <p>Elton J. Martins — 23 pedidos em um único dia</p>
+      </div>
+      <div class="testimonial-card">
+        <img src="img/depoimentos/depo-helton.jpg" alt="Depoimento de desempenho de loja" loading="lazy" decoding="async">
+        <p>R$12,19 mil em vendas no mês, 221 pedidos</p>
+      </div>
+      <div class="testimonial-card">
+        <img src="img/depoimentos/depo-daniele.jpg" alt="Depoimento da Loja Danielli" loading="lazy" decoding="async">
+        <p>Primeira venda da Loja Danielli, logo no início</p>
+      </div>
+      <div class="testimonial-card">
+        <img src="img/depoimentos/depo-elton2.jpg" alt="Depoimento sobre filamento esgotado por alta demanda" loading="lazy" decoding="async">
+        <p>Loja não para de vender — até o filamento acabou</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="pricing" id="preco">
   <div class="wrap">
     <div class="price-box bracket">
@@ -875,7 +936,7 @@
   // Revela seções suavemente conforme aparecem na tela
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     var revealTargets = document.querySelectorAll(
-      '.section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .money-callout h2, .money-callout p'
+      '.section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .testimonial-card, .money-callout h2, .money-callout p'
     );
     var revealObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -888,7 +949,7 @@
     revealTargets.forEach(function (el) { revealObserver.observe(el); });
   } else {
     document.querySelectorAll(
-      '.section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .money-callout h2, .money-callout p'
+      '.section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .testimonial-card, .money-callout h2, .money-callout p'
     ).forEach(function (el) { el.classList.add('is-visible'); });
   }
 </script>
