@@ -207,6 +207,21 @@
     line-height:1.35;
   }
   .price-note b{ color:var(--ink); font-size:15px; }
+  .proof-teaser{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:26px;
+    font-size:13px;
+    color:var(--ink-muted);
+    border-bottom:1px dashed var(--green-dim);
+    padding-bottom:2px;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .proof-teaser:hover{
+    color:var(--green);
+    border-color:var(--green);
+  }
 
   .hero-visual{
     position:relative;
@@ -684,6 +699,7 @@
         <a href="https://pay.hotmart.com/N105631506M?bid=1788882705503" onclick="return gtag_report_conversion('https://pay.hotmart.com/N105631506M?bid=1788882705503');" class="btn-primary">Quero começar agora</a>
         <div class="price-note"><b>R$49,90</b> pagamento único<br>garantia de 7 dias</div>
       </div>
+      <a href="#depoimentos" class="proof-teaser">Alunos já vendendo peças 3D — veja abaixo ↓</a>
     </div>
     <div class="hero-visual">
       <div class="hero-photo bracket">
@@ -855,7 +871,7 @@
   </div>
 </section>
 
-<section class="testimonials">
+<section class="testimonials" id="depoimentos">
   <div class="wrap">
     <div class="section-head">
       <h2>Quem fez o curso já está vendendo.</h2>
