@@ -419,11 +419,21 @@
     border-top:1px solid var(--line);
   }
   .testimonial-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
-    gap:24px;
+    display:flex;
+    gap:18px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:14px;
+    margin:0 -28px;
+    padding-left:28px;
+    padding-right:28px;
+    scrollbar-width:none;
   }
+  .testimonial-grid::-webkit-scrollbar{ display:none; }
   .testimonial-card{
+    flex:0 0 200px;
+    scroll-snap-align:start;
     background:var(--panel);
     border:1px solid var(--line);
     border-radius:8px;
@@ -439,6 +449,12 @@
     font-size:13.5px;
     color:var(--ink-muted);
     line-height:1.4;
+  }
+  .testimonials .scroll-hint{
+    text-align:center;
+    font-size:12px;
+    color:var(--ink-faint);
+    margin-top:6px;
   }
 
   /* ---------- pricing ---------- */
@@ -863,6 +879,10 @@
         <p>Loja do Adriano — pedidos triplicando em menos de 1 hora</p>
       </div>
       <div class="testimonial-card">
+        <img src="img/depoimentos/depo-ariane.jpg" alt="Depoimento da Loja da Ariane" loading="lazy" decoding="async">
+        <p>Loja da Ariane — 9 pedidos processados, visitas +200%</p>
+      </div>
+      <div class="testimonial-card">
         <img src="img/depoimentos/depo-daniele.jpg" alt="Depoimento da Loja Danielli" loading="lazy" decoding="async">
         <p>Primeira venda da Loja Danielli, logo no início</p>
       </div>
@@ -875,6 +895,7 @@
         <p>Loja do Naycon — aluno do curso</p>
       </div>
     </div>
+    <p class="scroll-hint">← arraste para o lado para ver mais →</p>
   </div>
 </section>
 
