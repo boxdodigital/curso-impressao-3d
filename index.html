@@ -41,15 +41,15 @@
 <style>
   :root{
     --bg: #0a0c08;
-    --panel: #12150f;
-    --panel-2: #171b12;
+    --panel: #202a15;
+    --panel-2: #2a3619;
     --line: #262c1e;
     --green: #8cff3d;
-    --green-deep: #4f9a24;
+    --green-deep: #53a228;
     --green-dim: #325a1c;
     --ink: #f2f4ec;
     --ink-muted: #9aa38f;
-    --ink-faint: #7a8370;
+    --ink-faint: #8a9380;
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
@@ -262,8 +262,24 @@
     0%, 100%{ transform:translateX(-50%) translateY(0); }
     50%{ transform:translateX(-50%) translateY(8px); }
   }
+  @keyframes scroll-bounce-sm{
+    0%, 100%{ transform:translateY(0); }
+    50%{ transform:translateY(6px); }
+  }
   @media (max-width: 860px){
     .scroll-cue{ display:none; }
+  }
+
+  .scroll-divider{
+    display:flex;
+    justify-content:center;
+    padding:22px 0;
+    color:var(--green-dim);
+    background:inherit;
+  }
+  .scroll-divider svg{ width:18px; height:18px; display:block; }
+  @media (prefers-reduced-motion: no-preference){
+    .scroll-divider svg{ animation:scroll-bounce-sm 1.8s ease-in-out infinite; }
   }
 
   /* ---------- pains ---------- */
@@ -753,6 +769,8 @@
   </div>
 </section>
 
+<div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
 <section class="forwhom">
   <div class="wrap">
     <div class="section-head">
@@ -777,6 +795,8 @@
     </div>
   </div>
 </section>
+
+<div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
 <section class="pains">
   <div class="wrap">
@@ -818,6 +838,8 @@
     </div>
   </div>
 </section>
+
+<div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
 <section class="modules grid-tex" id="conteudo">
   <div class="wrap">
@@ -891,6 +913,8 @@
   </div>
 </section>
 
+<div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
 <section class="instructor">
   <div class="wrap">
     <div class="avatar bracket">
@@ -903,6 +927,8 @@
     </div>
   </div>
 </section>
+
+<div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
 <section class="testimonials" id="depoimentos">
   <div class="wrap">
@@ -948,6 +974,8 @@
   </div>
 </section>
 
+<div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
 <section class="pricing" id="preco">
   <div class="wrap">
     <div class="price-box bracket">
@@ -967,6 +995,8 @@
     </div>
   </div>
 </section>
+
+<div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
 <section class="faq" id="faq">
   <div class="wrap">
@@ -996,6 +1026,8 @@
     </details>
   </div>
 </section>
+
+<div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
 <section class="final">
   <div class="wrap">
