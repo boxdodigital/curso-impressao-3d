@@ -245,6 +245,27 @@
   .hero-photo.bracket::after{ right:0; }
   .hero-photo.bracket .br{ right:0; }
 
+  .scroll-cue{
+    position:absolute;
+    left:50%;
+    bottom:18px;
+    transform:translateX(-50%);
+    color:var(--green);
+    opacity:.75;
+    z-index:2;
+  }
+  .scroll-cue svg{ width:26px; height:26px; display:block; }
+  @media (prefers-reduced-motion: no-preference){
+    .scroll-cue{ animation:scroll-bounce 1.8s ease-in-out infinite; }
+  }
+  @keyframes scroll-bounce{
+    0%, 100%{ transform:translateX(-50%) translateY(0); }
+    50%{ transform:translateX(-50%) translateY(8px); }
+  }
+  @media (max-width: 860px){
+    .scroll-cue{ display:none; }
+  }
+
   /* ---------- pains ---------- */
   .pains{
     padding:80px 0;
@@ -426,6 +447,10 @@
     font-style:normal;
     color:var(--green);
     font-weight:600;
+  }
+  .money-callout .btn-primary{
+    display:inline-block;
+    margin-top:30px;
   }
 
   /* ---------- testimonials ---------- */
@@ -715,6 +740,17 @@
       </div>
     </div>
   </div>
+  <a href="#proximo" class="scroll-cue" aria-label="Role para ver mais">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+</section>
+
+<section class="money-callout" id="proximo">
+  <div class="wrap">
+    <h2 class="reveal">Impressão 3D não é só hobby. É oportunidade de renda.</h2>
+    <p class="reveal">Pare de imprimir só pra você. Comece a imprimir pra <em>vender</em>.</p>
+    <a href="https://pay.hotmart.com/N105631506M?bid=1788882705503" onclick="return gtag_report_conversion('https://pay.hotmart.com/N105631506M?bid=1788882705503');" class="btn-primary reveal">Quero aprender a vender minhas peças</a>
+  </div>
 </section>
 
 <section class="forwhom">
@@ -865,13 +901,6 @@
       <p class="quote">"Ninguém nasce sabendo nivelar uma mesa. <span>Eu só encurto o caminho</span> que eu mesmo levei meses para descobrir sozinho."</p>
       <p class="instructor-name">— <b>Fabricio Matias Teixeira</b>, 5 anos de mercado em impressão 3D · 49,4 mil seguidores</p>
     </div>
-  </div>
-</section>
-
-<section class="money-callout">
-  <div class="wrap">
-    <h2 class="reveal">Impressão 3D não é só hobby. É oportunidade de renda.</h2>
-    <p class="reveal">Pare de imprimir só pra você. Comece a imprimir pra <em>vender</em>.</p>
   </div>
 </section>
 
