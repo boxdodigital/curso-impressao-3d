@@ -424,7 +424,7 @@
   }
   .avatar img{
     width:100%; height:100%; object-fit:cover;
-    object-position:center 20%;
+    object-position:center 28%;
   }
   .quote{
     font-family:'Space Grotesk', sans-serif;
@@ -918,7 +918,10 @@
   <div class="wrap">
     <div class="avatar bracket">
       <span class="bl"></span><span class="br"></span>
-      <img src="img/instrutor-foto.jpg" alt="Fabricio Matias Teixeira" loading="lazy" decoding="async">
+      <picture>
+        <source media="(max-width: 860px)" srcset="img/instrutor-foto-mobile.jpg">
+        <img src="img/instrutor-foto.jpg" alt="Fabricio Matias Teixeira" loading="lazy" decoding="async">
+      </picture>
     </div>
     <div>
       <p class="quote">"Ninguém nasce sabendo nivelar uma mesa. <span>Eu só encurto o caminho</span> que eu mesmo levei meses para descobrir sozinho."</p>
