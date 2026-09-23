@@ -14,11 +14,28 @@
   gtag('js', new Date());
   gtag('config', 'G-LH7JVTQDZF');
 
+  // Repassa o gclid e outros parâmetros de rastreamento do Google Ads até o link do Hotmart
+  function appendTrackingParams(url) {
+    var currentParams = window.location.search; // ex: "?gclid=XXX&gad_source=1"
+    var separator = url.indexOf('?') === -1 ? '?' : '&';
+    var finalUrl = url;
+    if (currentParams && currentParams.length > 1) {
+      finalUrl = finalUrl + separator + currentParams.substring(1);
+      separator = '&';
+    }
+    // Garante utm_source/medium/campaign legíveis no painel do Hotmart, mesmo sem gclid
+    if (finalUrl.indexOf('utm_source=') === -1) {
+      finalUrl = finalUrl + separator + 'utm_source=google&utm_medium=cpc&utm_campaign=curso_impressao_3d';
+    }
+    return finalUrl;
+  }
+
   // Dispara a conversão "Clique Comprar Curso" e só então navega até o checkout
   function gtag_report_conversion(url) {
+    var finalUrl = appendTrackingParams(url);
     var callback = function () {
-      if (typeof(url) != 'undefined') {
-        window.location = url;
+      if (typeof(finalUrl) != 'undefined') {
+        window.location = finalUrl;
       }
     };
     gtag('event', 'conversion', {
