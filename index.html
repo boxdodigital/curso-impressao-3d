@@ -50,7 +50,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <noscript><style>
-  .section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .testimonial-card, .money-callout h2, .money-callout p{
+  .section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .testimonial-card, .money-callout h2, .money-callout p, .refusal-text, .refusal-sub{
     opacity:1 !important;
     transform:none !important;
   }
@@ -489,6 +489,30 @@
     color:var(--green);
     font-weight:600;
   }
+
+  /* ---------- refusal (recusa do chamado) ---------- */
+  .refusal{
+    padding:50px 0;
+    text-align:center;
+  }
+  .refusal-text{
+    font-size:clamp(17px, 2.4vw, 22px);
+    color:var(--ink);
+    max-width:36ch;
+    margin:0 auto 10px;
+    line-height:1.4;
+  }
+  .refusal-text em{
+    font-style:normal;
+    color:var(--ink-muted);
+    border-bottom:1px dashed var(--line);
+  }
+  .refusal-sub{
+    font-size:14.5px;
+    color:var(--ink-faint);
+    max-width:40ch;
+    margin:0 auto;
+  }
   .money-callout .btn-primary{
     display:inline-block;
     margin-top:30px;
@@ -665,9 +689,15 @@
   .final h2{
     font-size:clamp(28px, 4vw, 42px);
     max-width:16ch;
-    margin:0 auto 28px;
+    margin:0 auto 14px;
   }
   .final h2 em{ font-style:normal; color:var(--green); }
+  .final-sub{
+    font-size:16px;
+    color:var(--ink-muted);
+    max-width:38ch;
+    margin:0 auto 28px;
+  }
 
   footer{
     border-top:1px solid var(--line);
@@ -709,7 +739,9 @@
     .faq-item,
     .testimonial-card,
     .money-callout h2,
-    .money-callout p{
+    .money-callout p,
+    .refusal-text,
+    .refusal-sub{
       opacity:0;
       transform:translateY(48px);
       transition:opacity .9s ease, transform .9s ease;
@@ -722,7 +754,9 @@
     .faq-item.is-visible,
     .testimonial-card.is-visible,
     .money-callout h2.is-visible,
-    .money-callout p.is-visible{
+    .money-callout p.is-visible,
+    .refusal-text.is-visible,
+    .refusal-sub.is-visible{
       opacity:1;
       transform:none;
     }
@@ -789,17 +823,7 @@
   </a>
 </section>
 
-<section class="money-callout" id="proximo">
-  <div class="wrap">
-    <h2 class="reveal">Impressão 3D não é só hobby. É oportunidade de renda.</h2>
-    <p class="reveal">Pare de imprimir só pra você. Comece a imprimir pra <em>vender</em>.</p>
-    <a href="https://pay.hotmart.com/N105631506M?bid=1788882705503" onclick="return gtag_report_conversion('https://pay.hotmart.com/N105631506M?bid=1788882705503');" class="btn-primary reveal">Quero aprender a vender minhas peças</a>
-  </div>
-</section>
-
-<div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-
-<section class="forwhom">
+<section class="forwhom" id="proximo">
   <div class="wrap">
     <div class="section-head">
       <h2>Esse curso é para você que</h2>
@@ -820,6 +844,43 @@
         <h3>Quer parar de errar por sorte</h3>
         <p>Você consegue imprimir, mas ainda não entende por que às vezes funciona e às vezes não. Falta o porquê por trás do processo.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+<section class="money-callout">
+  <div class="wrap">
+    <h2 class="reveal">Impressão 3D não é só hobby. É oportunidade de renda.</h2>
+    <p class="reveal">Pare de imprimir só pra você. Comece a imprimir pra <em>vender</em>.</p>
+    <a href="https://pay.hotmart.com/N105631506M?bid=1788882705503" onclick="return gtag_report_conversion('https://pay.hotmart.com/N105631506M?bid=1788882705503');" class="btn-primary reveal">Quero aprender a vender minhas peças</a>
+  </div>
+</section>
+
+<div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+<section class="refusal">
+  <div class="wrap">
+    <p class="refusal-text">Talvez você esteja pensando: <em>"não tenho jeito pra isso"</em> ou <em>"não vou ter tempo"</em>.</p>
+    <p class="refusal-sub">Todo mundo pensa isso antes de começar. A diferença é ter alguém que já errou tudo isso por você.</p>
+  </div>
+</section>
+
+<div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+<section class="instructor">
+  <div class="wrap">
+    <div class="avatar bracket">
+      <span class="bl"></span><span class="br"></span>
+      <picture>
+        <source media="(max-width: 860px)" srcset="img/mentor-foto-mobile.jpg">
+        <img src="img/mentor-foto.jpg" alt="Fabricio Matias Teixeira" loading="lazy" decoding="async">
+      </picture>
+    </div>
+    <div>
+      <p class="quote">"Ninguém nasce sabendo nivelar uma mesa. <span>Eu só encurto o caminho</span> que eu mesmo levei meses para descobrir sozinho."</p>
+      <p class="instructor-name">— <b>Fabricio Matias Teixeira</b>, 5 anos de mercado em impressão 3D · 49,4 mil seguidores</p>
     </div>
   </div>
 </section>
@@ -943,8 +1004,11 @@
 
 <div class="scroll-divider"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
-<section class="instructor">
+<section class="instructor transformation">
   <div class="wrap">
+    <div class="section-head" style="text-align:center; margin-bottom:36px;">
+      <h2>Ontem, hobby parado na estante.<br>Depois do curso, sua próxima fonte de renda.</h2>
+    </div>
     <div class="avatar bracket">
       <span class="bl"></span><span class="br"></span>
       <picture>
@@ -1062,11 +1126,11 @@
 
 <section class="final">
   <div class="wrap">
-    <h2>2026 é o ano ideal para <em>começar na impressão 3D.</em></h2>
-    <a href="https://pay.hotmart.com/N105631506M?bid=1788882705503" onclick="return gtag_report_conversion('https://pay.hotmart.com/N105631506M?bid=1788882705503');" class="btn-primary">Quero começar agora →</a>
+    <h2>A próxima história de sucesso pode ser <em>a sua.</em></h2>
+    <p class="final-sub">Você acabou de ver quem começou do zero e hoje vende. Comece a sua também.</p>
+    <a href="https://pay.hotmart.com/N105631506M?bid=1788882705503" onclick="return gtag_report_conversion('https://pay.hotmart.com/N105631506M?bid=1788882705503');" class="btn-primary">Quero começar minha transformação →</a>
   </div>
 </section>
-
 </main>
 
 <footer>
@@ -1077,7 +1141,7 @@
   // Revela seções suavemente conforme aparecem na tela
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     var revealTargets = document.querySelectorAll(
-      '.section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .testimonial-card, .money-callout h2, .money-callout p'
+      '.section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .testimonial-card, .money-callout h2, .money-callout p, .refusal-text, .refusal-sub'
     );
     var revealObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -1090,7 +1154,7 @@
     revealTargets.forEach(function (el) { revealObserver.observe(el); });
   } else {
     document.querySelectorAll(
-      '.section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .testimonial-card, .money-callout h2, .money-callout p'
+      '.section-head, .pain-cell, .forwhom-card, .module-card, .price-box, .faq-item, .testimonial-card, .money-callout h2, .money-callout p, .refusal-text, .refusal-sub'
     ).forEach(function (el) { el.classList.add('is-visible'); });
   }
 </script>
