@@ -24,8 +24,14 @@
       separator = '&';
     }
     // Garante utm_source/medium/campaign legíveis no painel do Hotmart, mesmo sem gclid
+    // (sem underscore no valor: o Hotmart não aceita "_" nos parâmetros de rastreamento)
     if (finalUrl.indexOf('utm_source=') === -1) {
-      finalUrl = finalUrl + separator + 'utm_source=google&utm_medium=cpc&utm_campaign=curso_impressao_3d';
+      finalUrl = finalUrl + separator + 'utm_source=google&utm_medium=cpc&utm_campaign=curso-impressao-3d';
+      separator = '&';
+    }
+    // SCK: parâmetro específico do Hotmart pra Produtor em link direto de checkout
+    if (finalUrl.indexOf('sck=') === -1) {
+      finalUrl = finalUrl + separator + 'sck=google|ads';
     }
     return finalUrl;
   }
