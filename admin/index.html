@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel da campanha · Curso Impressão 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+:root{
+  --fundo:#EEF1F2; --papel:#FFFFFF; --tinta:#1B2530; --suave:#5B6773;
+  --linha:#D5DBDF; --filamento:#0E8C80; --negativo:#B83A1B;
+  --raio:14px;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{
+  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:var(--fundo); color:var(--tinta);
+  font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased;
+  padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+button,input{font:inherit}
+:focus-visible{outline:3px solid var(--filamento);outline-offset:2px}
+.oculto{display:none!important}
+
+/* ---------- Login ---------- */
+#login{min-height:100%;display:grid;place-items:center;padding:24px}
+.caixa{
+  width:100%;max-width:380px;background:var(--papel);border-radius:var(--raio);
+  padding:32px 28px;border:1px solid var(--linha)
+}
+.caixa h1{font-size:1.5rem;font-stretch:110%;font-weight:750;line-height:1.15;margin-bottom:6px}
+.caixa p{color:var(--suave);font-size:.95rem;margin-bottom:24px}
+label{display:block;font-size:.85rem;font-weight:600;margin:14px 0 6px}
+input{
+  width:100%;padding:12px 14px;border:1px solid var(--linha);border-radius:10px;
+  background:#fff;color:var(--tinta);font-size:1rem
+}
+.botao{
+  width:100%;margin-top:22px;padding:13px;border:0;border-radius:10px;
+  background:var(--tinta);color:#fff;font-weight:650;cursor:pointer
+}
+.botao:disabled{opacity:.6;cursor:wait}
+.erro{color:var(--negativo);font-size:.9rem;margin-top:14px;min-height:1.2em}
+
+/* ---------- Painel ---------- */
+.topo{
+  max-width:880px;margin:0 auto;padding:22px 20px 0;
+  display:flex;justify-content:space-between;align-items:center;gap:12px
+}
+.marca{font-weight:700;font-size:.95rem}
+.sair{background:none;border:0;color:var(--suave);cursor:pointer;font-size:.9rem;text-decoration:underline}
+main{max-width:880px;margin:0 auto;padding:0 20px 48px}
+
+.periodo{display:flex;gap:6px;margin:26px 0 22px;background:#E2E7EA;padding:4px;border-radius:999px;width:max-content}
+.periodo button{border:0;background:none;padding:8px 16px;border-radius:999px;cursor:pointer;color:var(--suave);font-weight:600;font-size:.9rem}
+.periodo button[aria-pressed="true"]{background:var(--papel);color:var(--tinta);box-shadow:0 1px 2px rgba(27,37,48,.12)}
+
+/* A frase-resultado: o elemento principal da página */
+.resultado{
+  position:relative;background:var(--tinta);color:#fff;border-radius:var(--raio);
+  padding:34px 28px 30px;overflow:hidden
+}
+/* linhas de camada, como uma peça impressa em 3D */
+.resultado::after{
+  content:"";position:absolute;inset:auto 0 0 0;height:46%;
+  background:repeating-linear-gradient(to bottom,transparent 0 5px,rgba(255,255,255,.06) 5px 6px);
+  pointer-events:none
+}
+.resultado h1{
+  position:relative;z-index:1;font-size:clamp(1.55rem,4.6vw,2.6rem);
+  font-weight:700;font-stretch:112%;line-height:1.12;max-width:22ch
+}
+.resultado .valor{display:block;font-size:clamp(2.6rem,9vw,4.6rem);font-weight:800;font-stretch:118%;line-height:1;margin-top:14px}
+.resultado .valor.lucro{color:#5FE0C6}
+.resultado .valor.preju{color:#FF9C7E}
+.resultado small{position:relative;z-index:1;display:block;margin-top:16px;color:#AEB9C3;font-size:.85rem}
+
+.numeros{
+  display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px;
+  background:var(--papel);border-radius:var(--raio);border:1px solid var(--linha)
+}
+.numeros div{padding:18px 18px 16px}
+.numeros div+div{border-left:1px solid var(--linha)}
+.numeros span{display:block;color:var(--suave);font-size:.85rem}
+.numeros strong{display:block;font-size:1.45rem;font-weight:720;margin-top:4px}
+@media (max-width:620px){
+  .numeros{grid-template-columns:1fr 1fr}
+  .numeros div:nth-child(3){border-left:0}
+  .numeros div:nth-child(n+3){border-top:1px solid var(--linha)}
+}
+.funil{margin-top:14px;color:var(--suave);font-size:.95rem;line-height:1.5}
+.funil b{color:var(--tinta)}
+
+section{margin-top:40px}
+section h2{font-size:1.15rem;font-weight:700;font-stretch:108%;margin-bottom:14px}
+.bloco{background:var(--papel);border:1px solid var(--linha);border-radius:var(--raio);padding:20px}
+
+.legenda{display:flex;gap:18px;font-size:.85rem;color:var(--suave);margin-bottom:10px}
+.legenda i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.grafico{width:100%;overflow-x:auto}
+.grafico svg{display:block;width:100%;height:auto}
+
+.linha-tempo{list-style:none;padding:0}
+.linha-tempo li{display:grid;grid-template-columns:76px 1fr;gap:14px;padding:14px 0}
+.linha-tempo li+li{border-top:1px solid var(--linha)}
+.linha-tempo time{font-weight:650;color:var(--filamento);font-size:.92rem;padding-top:1px}
+.linha-tempo h3{font-size:1rem;font-weight:650;margin-bottom:4px}
+.linha-tempo p{color:var(--suave);font-size:.93rem;line-height:1.5;max-width:62ch}
+
+.proximo{border-left:4px solid var(--filamento);font-size:1.02rem;line-height:1.55}
+.rodape{margin-top:36px;color:var(--suave);font-size:.82rem}
+.vazio{color:var(--suave)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <form class="caixa" id="formLogin" novalidate>
+    <h1>Painel da campanha</h1>
+    <p>Curso Impressão 3D para Iniciantes</p>
+    <label for="email">E-mail</label>
+    <input id="email" type="email" autocomplete="username" required>
+    <label for="senha">Senha</label>
+    <input id="senha" type="password" autocomplete="current-password" required>
+    <button class="botao" id="entrar" type="submit">Entrar</button>
+    <div class="erro" id="erroLogin" role="alert"></div>
+  </form>
+</div>
+
+<!-- PAINEL -->
+<div id="painel" class="oculto">
+  <header class="topo">
+    <div class="marca">Curso Impressão 3D · Google Ads</div>
+    <button class="sair" id="sair">Sair</button>
+  </header>
+  <main>
+    <div class="periodo" role="group" aria-label="Período">
+      <button data-dias="7">7 dias</button>
+      <button data-dias="30" aria-pressed="true">30 dias</button>
+      <button data-dias="0">Desde o início</button>
+    </div>
+
+    <div class="resultado">
+      <h1 id="frase">Carregando…</h1>
+      <small>Faturamento registrado pelo Google, antes da taxa da Hotmart.</small>
+    </div>
+
+    <div class="numeros">
+      <div><span>Investido</span><strong id="nInvestido">–</strong></div>
+      <div><span>Faturado</span><strong id="nFaturado">–</strong></div>
+      <div><span>Vendas</span><strong id="nVendas">–</strong></div>
+      <div><span>Custo por venda</span><strong id="nCpa">–</strong></div>
+    </div>
+    <p class="funil" id="funil"></p>
+
+    <section>
+      <h2>Semana a semana</h2>
+      <div class="bloco">
+        <div class="legenda">
+          <span><i style="background:var(--tinta)"></i>Investido</span>
+          <span><i style="background:var(--filamento)"></i>Faturado</span>
+        </div>
+        <div class="grafico" id="grafico"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>O que fizemos na campanha</h2>
+      <div class="bloco"><ul class="linha-tempo" id="ajustes"></ul></div>
+    </section>
+
+    <section>
+      <h2>Próximo passo</h2>
+      <div class="bloco proximo" id="proximo"></div>
+    </section>
+
+    <p class="rodape" id="atualizado"></p>
+  </main>
+</div>
+
+<script>
+const SUPABASE_URL = "https://gudqqrgtokfommehftwh.supabase.co";
+const SUPABASE_KEY = "sb_publishable_runYWwpfUday3mA2gAyaMQ_TwmweWS5";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const $ = (id) => document.getElementById(id);
+const brl = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const dataBR = (s) => { const [y, m, d] = s.split("-"); return `${d}/${m}`; };
+const hojeBR = () => new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10);
+
+let dados = [], diasSel = 30;
+
+/* ---------- Login ---------- */
+$("formLogin").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("erroLogin").textContent = "";
+  $("entrar").disabled = true;
+  const { error } = await sb.auth.signInWithPassword({ email: $("email").value.trim(), password: $("senha").value });
+  $("entrar").disabled = false;
+  if (error) { $("erroLogin").textContent = "E-mail ou senha incorretos. Confira e tente de novo."; return; }
+  abrirPainel();
+});
+$("sair").addEventListener("click", async () => { await sb.auth.signOut(); location.reload(); });
+
+async function abrirPainel() {
+  $("login").classList.add("oculto");
+  $("painel").classList.remove("oculto");
+  const [a, b, c] = await Promise.all([
+    sb.from("ads_diario").select("*").order("data"),
+    sb.from("ajustes").select("*").order("data", { ascending: false }).order("id", { ascending: false }),
+    sb.from("proximo_passo").select("*").order("criado_em", { ascending: false }).limit(1),
+  ]);
+  if (a.error || !a.data || !a.data.length) {
+    $("frase").textContent = "Este login ainda não tem acesso aos dados. Fale com o Tim para liberar.";
+    return;
+  }
+  dados = a.data.map((r) => ({ ...r, gasto: +r.gasto, faturamento: +r.faturamento, vendas: +r.vendas, cliques: +r.cliques, cliques_comprar: +r.cliques_comprar }));
+  desenharAjustes(b.data || []);
+  $("proximo").textContent = c.data && c.data[0] ? c.data[0].texto : "Sem próximo passo definido.";
+  const ult = dados.reduce((m, r) => (r.atualizado_em > m ? r.atualizado_em : m), "");
+  if (ult) $("atualizado").textContent = "Números atualizados em " + new Date(ult).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) + ". O painel se atualiza sozinho duas vezes por dia.";
+  render();
+}
+
+document.querySelectorAll(".periodo button").forEach((b) =>
+  b.addEventListener("click", () => {
+    document.querySelectorAll(".periodo button").forEach((x) => x.setAttribute("aria-pressed", "false"));
+    b.setAttribute("aria-pressed", "true");
+    diasSel = +b.dataset.dias;
+    render();
+  })
+);
+
+/* ---------- Números ---------- */
+function filtrar() {
+  if (!diasSel) return dados;
+  const lim = new Date(hojeBR() + "T12:00:00Z"); lim.setUTCDate(lim.getUTCDate() - (diasSel - 1));
+  const corte = lim.toISOString().slice(0, 10);
+  return dados.filter((r) => r.data >= corte);
+}
+
+function render() {
+  const f = filtrar();
+  const s = f.reduce((t, r) => ({ g: t.g + r.gasto, fa: t.fa + r.faturamento, v: t.v + r.vendas, c: t.c + r.cliques, cc: t.cc + r.cliques_comprar }), { g: 0, fa: 0, v: 0, c: 0, cc: 0 });
+  const saldo = s.fa - s.g;
+  const quando = diasSel === 7 ? "Nos últimos 7 dias" : diasSel === 30 ? "Nos últimos 30 dias" : "Desde o início da campanha";
+  const vendasTxt = Math.round(s.v) === 1 ? "1 curso" : `${Math.round(s.v)} cursos`;
+  const fim = saldo >= 0 ? "e deixou de lucro" : "e ficou no negativo em";
+  $("frase").innerHTML = `${quando}, a campanha vendeu ${vendasTxt} ${fim}<span class="valor ${saldo >= 0 ? "lucro" : "preju"}">${brl(Math.abs(saldo))}</span>`;
+
+  $("nInvestido").textContent = brl(s.g);
+  $("nFaturado").textContent = brl(s.fa);
+  $("nVendas").textContent = Math.round(s.v);
+  $("nCpa").textContent = s.v ? brl(s.g / s.v) : "–";
+
+  $("funil").innerHTML = s.c
+    ? `De cada 100 pessoas que clicaram no anúncio, <b>${Math.round((s.cc / s.c) * 100)}</b> clicaram em "Comprar"` +
+      (s.cc ? ` e, dessas, <b>${Math.round((s.v / s.cc) * 100)}%</b> finalizaram a compra.` : ".")
+    : "";
+  desenharGrafico(f);
+}
+
+/* ---------- Gráfico semanal (SVG) ---------- */
+function segunda(iso) {
+  const d = new Date(iso + "T12:00:00Z"); const dia = (d.getUTCDay() + 6) % 7;
+  d.setUTCDate(d.getUTCDate() - dia); return d.toISOString().slice(0, 10);
+}
+function desenharGrafico(f) {
+  const sem = new Map();
+  f.forEach((r) => { const k = segunda(r.data); const a = sem.get(k) || { g: 0, fa: 0 }; a.g += r.gasto; a.fa += r.faturamento; sem.set(k, a); });
+  const lista = [...sem.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  if (!lista.length) { $("grafico").innerHTML = '<p class="vazio">Sem dados no período.</p>'; return; }
+
+  const W = 640, H = 240, pe = 46, pd = 10, pt = 14, pb = 34;
+  const max = Math.max(...lista.flatMap(([, v]) => [v.g, v.fa]), 1) * 1.12;
+  const larg = (W - pe - pd) / lista.length, bw = Math.min(26, larg * 0.32);
+  const y = (v) => pt + (H - pt - pb) * (1 - v / max);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Investido e faturado por semana">`;
+  for (let i = 0; i <= 3; i++) {
+    const v = (max / 1.12) * (i / 3), yy = y(v);
+    svg += `<line x1="${pe}" x2="${W - pd}" y1="${yy}" y2="${yy}" stroke="#E3E8EB"/>`;
+    svg += `<text x="${pe - 8}" y="${yy + 4}" text-anchor="end" font-size="11" fill="#5B6773">R$${Math.round(v)}</text>`;
+  }
+  lista.forEach(([k, v], i) => {
+    const cx = pe + larg * i + larg / 2;
+    svg += `<rect x="${cx - bw - 2}" y="${y(v.g)}" width="${bw}" height="${y(0) - y(v.g)}" rx="3" fill="#1B2530"><title>Investido: ${brl(v.g)}</title></rect>`;
+    svg += `<rect x="${cx + 2}" y="${y(v.fa)}" width="${bw}" height="${Math.max(y(0) - y(v.fa), 0)}" rx="3" fill="#0E8C80"><title>Faturado: ${brl(v.fa)}</title></rect>`;
+    svg += `<text x="${cx}" y="${H - 12}" text-anchor="middle" font-size="11" fill="#5B6773">sem. ${dataBR(k)}</text>`;
+  });
+  $("grafico").innerHTML = svg + "</svg>";
+}
+
+/* ---------- O que fizemos ---------- */
+function desenharAjustes(lista) {
+  const ul = $("ajustes");
+  ul.innerHTML = "";
+  if (!lista.length) { ul.innerHTML = '<li class="vazio">Nenhum ajuste registrado ainda.</li>'; return; }
+  lista.forEach((a) => {
+    const li = document.createElement("li");
+    const t = document.createElement("time"); t.dateTime = a.data; t.textContent = dataBR(a.data);
+    const div = document.createElement("div");
+    const h = document.createElement("h3"); h.textContent = a.titulo;
+    const p = document.createElement("p"); p.textContent = a.descricao || "";
+    div.append(h, p); li.append(t, div); ul.append(li);
+  });
+}
+
+/* ---------- Sessão salva ---------- */
+sb.auth.getSession().then(({ data }) => { if (data.session) abrirPainel(); });
+</script>
+</body>
+</html>
