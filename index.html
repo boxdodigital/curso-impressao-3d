@@ -14,7 +14,25 @@
   gtag('js', new Date());
   gtag('config', 'G-LH7JVTQDZF');
 
-  // Repassa o gclid e outros parâmetros de rastreamento do Google Ads até o link do Hotmart
+  // Repassa o gclid e outros parâmetros de rastreamento até o link do Hotmart
+  // e marca a ORIGEM real da visita (src/sck) para identificar cada venda no Hotmart.
+  // Valores sem underscore: o Hotmart não aceita "_" nos parâmetros de rastreamento.
+  function origemDaVisita() {
+    var q = new URLSearchParams(window.location.search);
+    var salvo = null;
+    try { salvo = sessionStorage.getItem('origem_visita'); } catch (e) {}
+    var origem;
+    var medium = (q.get('utm_medium') || '').toLowerCase();
+    var source = (q.get('utm_source') || '').toLowerCase();
+    if (medium === 'demandgen') origem = 'google-demandgen';
+    else if (q.get('gclid') || q.get('gbraid') || q.get('wbraid') || medium === 'cpc') origem = 'google-pesquisa';
+    else if (source) origem = (source + (medium ? '-' + medium : '')).replace(/[^a-z0-9-]/g, '-');
+    else if (salvo) origem = salvo;
+    else origem = 'lp-direto';
+    try { sessionStorage.setItem('origem_visita', origem); } catch (e) {}
+    return origem;
+  }
+
   function appendTrackingParams(url) {
     var currentParams = window.location.search; // ex: "?gclid=XXX&gad_source=1"
     var separator = url.indexOf('?') === -1 ? '?' : '&';
@@ -23,15 +41,13 @@
       finalUrl = finalUrl + separator + currentParams.substring(1);
       separator = '&';
     }
-    // Garante utm_source/medium/campaign legíveis no painel do Hotmart, mesmo sem gclid
-    // (sem underscore no valor: o Hotmart não aceita "_" nos parâmetros de rastreamento)
-    if (finalUrl.indexOf('utm_source=') === -1) {
-      finalUrl = finalUrl + separator + 'utm_source=google&utm_medium=cpc&utm_campaign=curso-impressao-3d';
+    var origem = origemDaVisita();
+    if (finalUrl.indexOf('src=') === -1) {
+      finalUrl = finalUrl + separator + 'src=' + encodeURIComponent(origem);
       separator = '&';
     }
-    // SCK: parâmetro específico do Hotmart pra Produtor em link direto de checkout
     if (finalUrl.indexOf('sck=') === -1) {
-      finalUrl = finalUrl + separator + 'sck=google|ads';
+      finalUrl = finalUrl + separator + 'sck=' + encodeURIComponent(origem);
     }
     return finalUrl;
   }
