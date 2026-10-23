@@ -33,6 +33,32 @@
     return origem;
   }
 
+  // Guarda o código do clique do anúncio (gclid/gbraid/wbraid) no banco e gera um id curto.
+  // O id vai no "src" da Hotmart; quando a venda é aprovada, o webhook devolve o id e
+  // a venda é importada no Google Ads ligada ao clique certo.
+  function registrarClique() {
+    var q = new URLSearchParams(window.location.search);
+    var g = q.get('gclid'), gb = q.get('gbraid'), wb = q.get('wbraid');
+    if (!g && !gb && !wb) {
+      try { return sessionStorage.getItem('clique_id'); } catch (e) { return null; }
+    }
+    var id = 'k';
+    try {
+      var a = new Uint8Array(14); crypto.getRandomValues(a);
+      for (var i = 0; i < a.length; i++) id += (a[i] % 36).toString(36);
+    } catch (e) { id += (Date.now().toString(36) + Math.random().toString(36).slice(2)).slice(0, 14); }
+    try { sessionStorage.setItem('clique_id', id); } catch (e) {}
+    try {
+      fetch('https://gudqqrgtokfommehftwh.supabase.co/rest/v1/lp_cliques', {
+        method: 'POST', keepalive: true,
+        headers: { 'apikey': 'sb_publishable_runYWwpfUday3mA2gAyaMQ_TwmweWS5', 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ id: id, gclid: g || null, gbraid: gb || null, wbraid: wb || null, origem: origemDaVisita() })
+      }).catch(function () {});
+    } catch (e) {}
+    return id;
+  }
+  var cliqueId = registrarClique();
+
   function appendTrackingParams(url) {
     var currentParams = window.location.search; // ex: "?gclid=XXX&gad_source=1"
     var separator = url.indexOf('?') === -1 ? '?' : '&';
@@ -43,7 +69,7 @@
     }
     var origem = origemDaVisita();
     if (finalUrl.indexOf('src=') === -1) {
-      finalUrl = finalUrl + separator + 'src=' + encodeURIComponent(origem);
+      finalUrl = finalUrl + separator + 'src=' + encodeURIComponent(cliqueId || origem);
       separator = '&';
     }
     if (finalUrl.indexOf('sck=') === -1) {
