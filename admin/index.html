@@ -115,6 +115,13 @@ section h2{font-size:1.15rem;font-weight:700;font-stretch:108%;margin-bottom:14p
 .proximo{border-left:4px solid var(--filamento);font-size:1.02rem;line-height:1.55}
 .rodape{margin-top:36px;color:var(--suave);font-size:.82rem}
 .vazio{color:var(--suave)}
+.reais{width:100%;border-collapse:collapse;font-size:.95rem}
+.reais th{text-align:left;color:var(--suave);font-weight:600;font-size:.82rem;padding:0 8px 10px 0}
+.reais td{padding:12px 8px 12px 0;border-top:1px solid var(--linha)}
+.reais td:not(:first-child),.reais th:not(:first-child){text-align:right}
+.reais td small{display:block;color:var(--suave);font-size:.8rem}
+.nota{margin-top:12px;color:var(--suave);font-size:.85rem;line-height:1.5}
+@media (max-width:620px){.reais{font-size:.88rem}}
 </style>
 </head>
 <body>
@@ -160,6 +167,14 @@ section h2{font-size:1.15rem;font-weight:700;font-stretch:108%;margin-bottom:14p
     <p class="funil" id="funil"></p>
 
     <section>
+      <h2>Vendas reais por campanha</h2>
+      <div class="bloco">
+        <div style="overflow-x:auto"><table class="reais" id="reais"></table></div>
+        <p class="nota">Contadas pela Hotmart: só compras aprovadas. Clique em "Comprar" sem compra não entra aqui.</p>
+      </div>
+    </section>
+
+    <section>
       <h2>Semana a semana</h2>
       <div class="bloco">
         <div class="legenda">
@@ -194,7 +209,7 @@ const brl = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL
 const dataBR = (s) => { const [y, m, d] = s.split("-"); return `${d}/${m}`; };
 const hojeBR = () => new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10);
 
-let dados = [], diasSel = 30;
+let dados = [], credito = [], reais = [], diasSel = 30;
 
 /* ---------- Login ---------- */
 $("formLogin").addEventListener("submit", async (e) => {
@@ -211,7 +226,9 @@ $("sair").addEventListener("click", async () => { await sb.auth.signOut(); locat
 async function abrirPainel() {
   $("login").classList.add("oculto");
   $("painel").classList.remove("oculto");
-  const [a, b, c] = await Promise.all([
+  const [a, b, c, d, e] = await Promise.all([
+    sb.from("ads_credito_diario").select("data,gasto").order("data"),
+    sb.rpc("vendas_reais"),
     sb.from("ads_diario").select("*").order("data"),
     sb.from("ajustes").select("*").order("data", { ascending: false }).order("id", { ascending: false }),
     sb.from("proximo_passo").select("*").order("criado_em", { ascending: false }).limit(1),
@@ -221,6 +238,8 @@ async function abrirPainel() {
     return;
   }
   dados = a.data.map((r) => ({ ...r, gasto: +r.gasto, faturamento: +r.faturamento, vendas: +r.vendas, cliques: +r.cliques, cliques_comprar: +r.cliques_comprar }));
+  credito = (d.data || []).map((r) => ({ data: r.data, gasto: +r.gasto }));
+  reais = (e.data || []).map((r) => ({ data: r.dia, canal: r.canal, vendas: +r.vendas, liquido: +r.liquido }));
   desenharAjustes(b.data || []);
   $("proximo").textContent = c.data && c.data[0] ? c.data[0].texto : "Sem próximo passo definido.";
   const ult = dados.reduce((m, r) => (r.atualizado_em > m ? r.atualizado_em : m), "");
@@ -264,6 +283,32 @@ function render() {
       (s.cc ? ` e, dessas, <b>${Math.round((s.v / s.cc) * 100)}%</b> finalizaram a compra.` : ".")
     : "";
   desenharGrafico(f);
+  desenharReais();
+}
+
+/* ---------- Vendas reais (Hotmart) ---------- */
+function noPeriodo(lista) {
+  if (!diasSel) return lista;
+  const lim = new Date(hojeBR() + "T12:00:00Z"); lim.setUTCDate(lim.getUTCDate() - (diasSel - 1));
+  const corte = lim.toISOString().slice(0, 10);
+  return lista.filter((r) => r.data >= corte);
+}
+function desenharReais() {
+  const vr = noPeriodo(reais);
+  const soma = (c) => vr.filter((r) => r.canal === c).reduce((t, r) => ({ v: t.v + r.vendas, l: t.l + r.liquido }), { v: 0, l: 0 });
+  const gPesq = filtrar().reduce((t, r) => t + r.gasto, 0);
+  const gVid = noPeriodo(credito).reduce((t, r) => t + r.gasto, 0);
+  const linhas = [
+    { nome: "Campanha de pesquisa", sub: "Google, busca", g: gPesq, ...soma("pesquisa") },
+    { nome: "Campanha de vídeo", sub: "YouTube, paga pelo crédito do Google", g: gVid, ...soma("video") },
+    { nome: "Página da Hotmart", sub: "sem anúncio identificado", g: null, ...soma("pagina_hotmart") },
+    { nome: "Outras origens", sub: "", g: null, ...soma("outros") },
+  ].filter((x) => x.v || x.g);
+  let h = "<thead><tr><th>Origem</th><th>Vendas</th><th>Investido</th><th>Custo por venda</th><th>Recebido</th></tr></thead><tbody>";
+  linhas.forEach((x) => {
+    h += `<tr><td>${x.nome}${x.sub ? `<small>${x.sub}</small>` : ""}</td><td><b>${x.v}</b></td><td>${x.g === null ? "–" : brl(x.g)}</td><td>${x.g !== null && x.v ? brl(x.g / x.v) : "–"}</td><td>${brl(x.l)}</td></tr>`;
+  });
+  $("reais").innerHTML = linhas.length ? h + "</tbody>" : '<tbody><tr><td class="vazio">Sem vendas no período.</td></tr></tbody>';
 }
 
 /* ---------- Gráfico semanal (SVG) ---------- */
