@@ -24,7 +24,11 @@
     var origem;
     var medium = (q.get('utm_medium') || '').toLowerCase();
     var source = (q.get('utm_source') || '').toLowerCase();
-    if (medium === 'demandgen') origem = 'google-demandgen';
+    // Meta (Facebook/Instagram): vem com fbclid ou utm_source an/fb/ig. O anúncio do Meta
+    // usa um link com código antigo do Google (gbraid), então o Meta é checado primeiro.
+    var ehMeta = !!q.get('fbclid') || ['an', 'fb', 'ig', 'facebook', 'instagram', 'meta'].indexOf(source) !== -1;
+    if (ehMeta) origem = 'meta';
+    else if (medium === 'demandgen') origem = 'google-demandgen';
     else if (q.get('gclid') || q.get('gbraid') || q.get('wbraid') || medium === 'cpc') origem = 'google-pesquisa';
     else if (source) origem = (source + (medium ? '-' + medium : '')).replace(/[^a-z0-9-]/g, '-');
     else if (salvo) origem = salvo;
@@ -36,9 +40,26 @@
   // Guarda o código do clique do anúncio (gclid/gbraid/wbraid) no banco e gera um id curto.
   // O id vai no "src" da Hotmart; quando a venda é aprovada, o webhook devolve o id e
   // a venda é importada no Google Ads ligada ao clique certo.
+  // Teste A/B da headline (25/10): metade vê a atual (A), metade a nova (B).
+  // A versão fica guardada no navegador; ?v=a ou ?v=b força uma versão (para conferência).
+  function varianteHeadline() {
+    var f = (new URLSearchParams(window.location.search).get('v') || '').toUpperCase();
+    var v = null;
+    if (f === 'A' || f === 'B') v = f;
+    else { try { v = localStorage.getItem('hl_var'); } catch (e) {} }
+    if (v !== 'A' && v !== 'B') v = Math.random() < 0.5 ? 'A' : 'B';
+    try { localStorage.setItem('hl_var', v); } catch (e) {}
+    return v;
+  }
+  var varHeadline = varianteHeadline();
+
   function registrarClique() {
     var q = new URLSearchParams(window.location.search);
     var g = q.get('gclid'), gb = q.get('gbraid'), wb = q.get('wbraid');
+    if (origemDaVisita() === 'meta') {
+      try { sessionStorage.removeItem('clique_id'); } catch (e) {}
+      return null;
+    }
     if (!g && !gb && !wb) {
       try { return sessionStorage.getItem('clique_id'); } catch (e) { return null; }
     }
@@ -52,7 +73,7 @@
       fetch('https://gudqqrgtokfommehftwh.supabase.co/rest/v1/lp_cliques', {
         method: 'POST', keepalive: true,
         headers: { 'apikey': 'sb_publishable_runYWwpfUday3mA2gAyaMQ_TwmweWS5', 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ id: id, gclid: g || null, gbraid: gb || null, wbraid: wb || null, origem: origemDaVisita() })
+        body: JSON.stringify({ id: id, gclid: g || null, gbraid: gb || null, wbraid: wb || null, origem: origemDaVisita(), variante: varHeadline })
       }).catch(function () {});
     } catch (e) {}
     return id;
@@ -81,6 +102,7 @@
   // Dispara a conversão "Clique Comprar Curso" e só então navega até o checkout
   function gtag_report_conversion(url) {
     var finalUrl = appendTrackingParams(url);
+    try { if (window.clarity) clarity('event', 'comprar-' + varHeadline); } catch (e) {}
     var callback = function () {
       if (typeof(finalUrl) != 'undefined') {
         window.location = finalUrl;
@@ -831,6 +853,7 @@
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "yjrmgzlqvm");
+    try { clarity('set', 'headline', varHeadline); clarity('set', 'origem', origemDaVisita()); } catch (e) {}
 </script>
 </head>
 <body>
@@ -852,6 +875,13 @@
       </div>
       <h1>Do zero ao seu <em>projeto final</em></h1>
       <p class="lede">Curso completo de impressão 3D para iniciantes, sem enrolação, pensado para quem nunca imprimiu nada em 3D.</p>
+      <script>
+        if (varHeadline === 'B') {
+          var hh = document.querySelector('.hero h1'), hl = document.querySelector('.hero .lede');
+          if (hh) hh.innerHTML = 'Aprenda impressão 3D e <em>produza peças pra vender</em>';
+          if (hl) hl.textContent = 'Do zero à primeira peça pronta, passo a passo.';
+        }
+      </script>
       <div class="hero-cta">
         <a href="https://pay.hotmart.com/N105631506M?bid=1788882705503" onclick="return gtag_report_conversion('https://pay.hotmart.com/N105631506M?bid=1788882705503');" class="btn-primary">Quero começar agora</a>
         <div class="price-note"><b>R$49,90</b> pagamento único<br>garantia de 7 dias</div>
