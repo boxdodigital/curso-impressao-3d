@@ -301,6 +301,8 @@ function desenharReais() {
   const linhas = [
     { nome: "Campanha de pesquisa", sub: "Google, busca", g: gPesq, ...soma("pesquisa") },
     { nome: "Campanha de vídeo", sub: "YouTube, paga pelo crédito do Google", g: gVid, ...soma("video") },
+    { nome: "Google sem marca de campanha", sub: "pesquisa pausada; pode ser vídeo ou o link do Meta", g: null, ...soma("google_sem_marca") },
+    { nome: "Meta", sub: "Facebook e Instagram", g: null, ...soma("meta") },
     { nome: "Página da Hotmart", sub: "sem anúncio identificado", g: null, ...soma("pagina_hotmart") },
     { nome: "Outras origens", sub: "", g: null, ...soma("outros") },
   ].filter((x) => x.v || x.g);
