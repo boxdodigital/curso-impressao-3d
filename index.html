@@ -306,6 +306,7 @@
     object-position:50% center;
     display:block;
   }
+  .hero-photo-link{ display:block; }
   .hero-photo.bracket::after{ right:0; }
   .hero-photo.bracket .br{ right:0; }
   .hero-photo-caption{
@@ -758,8 +759,10 @@
   @media (max-width: 860px){
     .hero-inner{ grid-template-columns:1fr; gap:0; padding-left:0; }
     .hero-text-col{ padding-left:28px; padding-right:28px; }
-    .hero-visual{ order:-1; margin-bottom:28px; }
-    .hero-photo{ height:min(105vw, 520px); }
+    /* celular: título, preço e botão na primeira tela; foto vem depois (Clarity 25/10: 72% não rolavam além da foto) */
+    .hero{ padding:28px 0 48px; }
+    .hero-visual{ margin-top:36px; }
+    .hero-photo{ height:min(90vw, 440px); }
     .hero-photo-caption{ padding-right:20px; padding-left:20px; text-align:center; }
     .hero-photo{ border-radius:0; }
     .hero-photo img{ object-position:50% 40%; }
@@ -856,6 +859,7 @@
       <a href="#depoimentos" class="proof-teaser">Alunos já vendendo peças 3D — veja abaixo ↓</a>
     </div>
     <div class="hero-visual">
+      <a href="#preco" class="hero-photo-link" aria-label="Ver preço e inscrição">
       <div class="hero-photo bracket">
         <span class="bl"></span><span class="br"></span>
         <picture>
@@ -863,6 +867,7 @@
           <img src="img/hero-foto-v3.jpg" alt="Instrutor Fabricio Matias Teixeira ao lado de impressora 3D e peças impressas em verde" fetchpriority="high" decoding="async">
         </picture>
       </div>
+      </a>
       <p class="hero-photo-caption"><b>Fabricio Matias Teixeira</b> — 5 anos de mercado em impressão 3D · 49,4 mil seguidores</p>
     </div>
   </div>
