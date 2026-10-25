@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tudo sobre a impressão 3D - Curso completo para iniciantes</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0c08'/%3E%3Crect x='11' y='11' width='10' height='10' fill='%238cff3d'/%3E%3C/svg%3E">
 <meta name="description" content="Curso de impressão 3D para iniciantes: aprenda a escolher sua impressora, montar, calibrar, fatiar arquivos STL e imprimir sua primeira peça sem erros. Aulas em vídeo, do zero.">
 <meta name="keywords" content="curso de impressão 3D, impressão 3D para iniciantes, como aprender impressão 3D, impressora 3D iniciante, curso impressora 3D online">
 <!-- Google tag (gtag.js) -->
@@ -783,6 +784,7 @@
     .hero-text-col{ padding-left:28px; padding-right:28px; }
     /* celular: título, preço e botão na primeira tela; foto vem depois (Clarity 25/10: 72% não rolavam além da foto) */
     .hero{ padding:28px 0 48px; }
+    header{ backdrop-filter:none; background:rgba(10,12,8,.97); }
     .hero-visual{ margin-top:36px; }
     .hero-photo{ height:min(90vw, 440px); }
     .hero-photo-caption{ padding-right:20px; padding-left:20px; text-align:center; }
@@ -836,13 +838,18 @@
   }
 
   /* leve pulso no botão principal do hero, chama o olho pro CTA */
+  /* pulso feito só com transform/opacity: não obriga o celular a redesenhar a página */
   @keyframes cta-pulse{
-    0%, 100%{ box-shadow:0 0 0 0 rgba(140,255,61,.35); }
-    50%{ box-shadow:0 0 0 10px rgba(140,255,61,0); }
+    0%{ transform:scale(1); opacity:.55; }
+    70%, 100%{ transform:scale(1.12, 1.35); opacity:0; }
   }
+  .hero-cta .btn-primary{ position:relative; }
   @media (prefers-reduced-motion: no-preference){
-    .hero-cta .btn-primary{
-      animation:cta-pulse 2.6s ease-in-out infinite;
+    .hero-cta .btn-primary::after{
+      content:""; position:absolute; inset:0; border-radius:inherit;
+      border:2px solid rgba(140,255,61,.6);
+      pointer-events:none;
+      animation:cta-pulse 2.6s ease-out infinite;
     }
   }
 </style>
@@ -893,6 +900,7 @@
       <div class="hero-photo bracket">
         <span class="bl"></span><span class="br"></span>
         <picture>
+          <source media="(max-width: 860px)" type="image/webp" srcset="img/hero-foto-mobile-v5.webp">
           <source media="(max-width: 860px)" srcset="img/hero-foto-mobile-v4.jpg">
           <img src="img/hero-foto-v3.jpg" alt="Instrutor Fabricio Matias Teixeira ao lado de impressora 3D e peças impressas em verde" fetchpriority="high" decoding="async">
         </picture>
