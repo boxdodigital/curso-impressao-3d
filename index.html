@@ -116,6 +116,9 @@
     return false;
   }
 </script>
+<!-- Foto principal: baixa logo no início (ela é o maior elemento da primeira tela) -->
+<link rel="preload" as="image" href="img/hero-foto-mobile-v5.webp" type="image/webp" media="(max-width: 860px)" fetchpriority="high">
+<link rel="preload" as="image" href="img/hero-foto-v3.jpg" media="(min-width: 861px)" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
