@@ -54,15 +54,39 @@
   }
   var varHeadline = varianteHeadline();
 
+  // O id do clique também fica guardado por 30 dias no navegador (clique_salvo), para a venda
+  // ser ligada ao anúncio mesmo quando a pessoa volta outro dia sem o gclid na URL.
+  var CLIQUE_VALIDADE_MS = 30 * 24 * 3600 * 1000;
+  function cliqueSalvo() {
+    try {
+      var s = JSON.parse(localStorage.getItem('clique_salvo') || 'null');
+      if (s && s.id && s.t && (Date.now() - s.t) < CLIQUE_VALIDADE_MS) return s;
+    } catch (e) {}
+    return null;
+  }
+
   function registrarClique() {
     var q = new URLSearchParams(window.location.search);
     var g = q.get('gclid'), gb = q.get('gbraid'), wb = q.get('wbraid');
     if (origemDaVisita() === 'meta') {
       try { sessionStorage.removeItem('clique_id'); } catch (e) {}
+      try { localStorage.removeItem('clique_salvo'); } catch (e) {}
       return null;
     }
     if (!g && !gb && !wb) {
-      try { return sessionStorage.getItem('clique_id'); } catch (e) { return null; }
+      try {
+        var atual = sessionStorage.getItem('clique_id');
+        if (atual) return atual;
+      } catch (e) {}
+      var salvo = cliqueSalvo();
+      return salvo ? salvo.id : null;
+    }
+    // Mesmo código de clique já registrado (recarga da página): reaproveita o id em vez de gravar outro.
+    var codigo = g || gb || wb;
+    var anterior = cliqueSalvo();
+    if (anterior && anterior.cod === codigo) {
+      try { sessionStorage.setItem('clique_id', anterior.id); } catch (e) {}
+      return anterior.id;
     }
     var id = 'k';
     try {
@@ -70,6 +94,7 @@
       for (var i = 0; i < a.length; i++) id += (a[i] % 36).toString(36);
     } catch (e) { id += (Date.now().toString(36) + Math.random().toString(36).slice(2)).slice(0, 14); }
     try { sessionStorage.setItem('clique_id', id); } catch (e) {}
+    try { localStorage.setItem('clique_salvo', JSON.stringify({ id: id, cod: codigo, t: Date.now() })); } catch (e) {}
     try {
       fetch('https://gudqqrgtokfommehftwh.supabase.co/rest/v1/lp_cliques', {
         method: 'POST', keepalive: true,
