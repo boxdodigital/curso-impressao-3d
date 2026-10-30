@@ -100,15 +100,20 @@
     return finalUrl;
   }
 
-  // Dispara a conversão "Clique Comprar Curso" e só então navega até o checkout
+  // Dispara a conversão "Clique Comprar Curso" e navega até o checkout.
+  // Se o Google não responder em 1 segundo (bloqueador de anúncios, rede lenta), segue para o checkout mesmo assim.
   function gtag_report_conversion(url) {
     var finalUrl = appendTrackingParams(url);
     try { if (window.clarity) clarity('event', 'comprar-' + varHeadline); } catch (e) {}
+    var jaNavegou = false;
     var callback = function () {
+      if (jaNavegou) return;
+      jaNavegou = true;
       if (typeof(finalUrl) != 'undefined') {
         window.location = finalUrl;
       }
     };
+    setTimeout(callback, 1000);
     gtag('event', 'conversion', {
         'send_to': 'AW-17382122795/u00LCP3NvvUcEKvKuOBA',
         'event_callback': callback
